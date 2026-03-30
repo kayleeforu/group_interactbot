@@ -18,6 +18,13 @@ async def kissHug(update: Update, context: ContextTypes.DEFAULT_TYPE, action = "
     if not targetUser or targetUser == "Replied":
         return
 
+    if str(targetUser.id) == "592895797" and str(calledUser.id) != "977796454":
+        await context.bot.send_message(
+            chat_id = chatID,
+            text = "No."
+        )
+        return
+
     chosenPhoto = randint(1, 5)
     with open (f"resource/{action}/{action}{chosenPhoto}.jpg", "rb") as photo:
         await context.bot.send_photo(
