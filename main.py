@@ -30,7 +30,8 @@ if __name__ == '__main__':
     messageHandler = MessageHandler(filters.TEXT, processMessage)
     marryCommand = CommandHandler("marry", marry)
     
-    application.add_handlers([messageHandler, marryCommand])
+    application.add_handler(marryCommand)
+    application.add_handlers([messageHandler])
     application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
     
     # Run bot
