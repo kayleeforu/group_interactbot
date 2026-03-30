@@ -29,11 +29,11 @@ def buildPairs(response, chatID):
 def buildText(pairs, page):
     start = page * 8
     end = start + 8
-    slice = pairs[start:end]
+    pagePairs  = pairs[start:end]
     text = "The list of marriages in this chat:\n"
-    for i, entry in enumerate(slice):
+    for i, entry in enumerate(pagePairs):
         count = start + i + 1
-        text += f'{count}. <a href="tg://user?id={entry[0].id}">{entry[0].firstname}</a> and <a href="tg://user?id={entry[1].id}">{entry[1].firstname}</a>. Married for {entry[2]}.\n'
+        text += f'{count}. \u200e<a href="tg://user?id={entry[0].id}">{entry[0].firstname}</a> and \u200e<a href="tg://user?id={entry[1].id}">{entry[1].firstname}</a>. Married for {entry[2]}.\n'
     return text
 
 def buildKeyboard(pairs, page, chatID):

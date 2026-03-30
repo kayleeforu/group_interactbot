@@ -99,5 +99,5 @@ class Database:
     
     def getMarriedList(self, chatID):
         db = self.getClient()
-        response = db.table("users").select("*").eq("chatID", int(chatID)).not_.is_("marriedTo", "NULL").order("marriedAt", desc=True).execute().data
+        response = db.table("users").select("*").eq("chatID", int(chatID)).not_.is_("marriedTo", "NULL").order("marriedAt", desc=False).execute().data
         return response if response else None
