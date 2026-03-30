@@ -174,7 +174,7 @@ async def getProposingToUserObj(update: Update, context: ContextTypes.DEFAULT_TY
     if message.reply_to_message:
         user = message.reply_to_message.from_user
         return User(user.id, chatID, user.first_name)
-    
+
     if message.entities:
         for entity in message.entities:
             if entity.type == "text_mention":
@@ -183,11 +183,15 @@ async def getProposingToUserObj(update: Update, context: ContextTypes.DEFAULT_TY
 
             elif entity.type == "mention":
                 username = message.text[entity.offset:entity.offset + entity.length]
+                
+                if not username.startswith("@"):
+                    username = f"@{username}"
+                
                 try:
-                    chat_info = await context.bot.get_chat(username)
-                    name = chat_info.first_name or chat_info.title or "Unknown"
-                    return User(chat_info.id, chatID, name)
+                    user_chat = await context.bot.get_chat(username)
+                    return User(user_chat.id, chatID, user_chat.first_name)
                 except Exception as e:
-                    print(f"Error resolving username: {e}")
+                    print(f"Didn't find {username}: {e}")
                     return None
+                    
     return None
