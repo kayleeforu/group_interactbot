@@ -1,12 +1,15 @@
 import logging
-from telegram.ext import ApplicationBuilder, filters, MessageHandler
+from telegram.ext import ApplicationBuilder, filters, MessageHandler, CommandHandler, CallbackQueryHandler
 import os
 from handlers.messageHandler import processMessage
+from commands.marry import marry, marry_callback
 
 logging.basicConfig(
    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
    level=logging.INFO
 )
+
+
 
 if __name__ == '__main__':
     TOKEN = os.environ.get("INTERACTBOT_TOKEN")
@@ -25,8 +28,10 @@ if __name__ == '__main__':
 
     # Message Handler
     messageHandler = MessageHandler(filters.TEXT, processMessage)
+    marryCommand = CommandHandler("marry", marry)
     
-    application.add_handlers([messageHandler])
+    application.add_handlers([messageHandler, marryCommand])
+    application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
     
     # Run bot
     application.run_polling()
