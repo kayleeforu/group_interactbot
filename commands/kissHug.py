@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from utilities.userClass import User
+from utilities.User import User
 from random import randint
 from utilities.getTargetUserObj import getTargetUserObj
 

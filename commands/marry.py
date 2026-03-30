@@ -4,7 +4,7 @@ import db
 from datetime import datetime, timezone
 from random import randint
 from utilities.getTargetUserObj import getTargetUserObj
-from utilities.userClass import User
+from utilities.User import User
 
 database = db.Database()
 
