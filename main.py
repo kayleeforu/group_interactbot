@@ -3,6 +3,7 @@ from telegram.ext import ApplicationBuilder, filters, MessageHandler, CommandHan
 import os
 from handlers.messageHandler import processMessage
 from commands.marry import marry, marry_callback
+from commands.kissHug import kissHug
 
 logging.basicConfig(
    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -29,6 +30,8 @@ if __name__ == '__main__':
     # Message Handler
     messageHandler = MessageHandler(filters.TEXT, processMessage)
     marryCommand = CommandHandler("marry", marry)
+    kissCommand = CommandHandler("kiss", kissHug)
+    hugCommand = CommandHandler("hug", kissHug("hug"))
     
     application.add_handler(marryCommand)
     application.add_handlers([messageHandler])

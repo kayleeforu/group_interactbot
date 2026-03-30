@@ -3,48 +3,10 @@ from telegram.ext import ContextTypes
 import db
 from datetime import datetime, timezone
 from random import randint
+from utilities.getTargetUserObj import getTargetUserObj
+from utilities.User import User
 
 database = db.Database()
-
-
-class User:
-    def __init__(self, userID, chatID, firstname=None, username=None):
-        self.id = int(userID)
-        self.chatID = int(chatID)
-
-        data = database.getUser(self.id, self.chatID)
-
-        if data is None:
-            database.insertNewUser(self.id, self.chatID, firstname or "Unknown", username)
-            data = database.getUser(self.id, self.chatID)
-
-        if firstname and data.get("firstname") != firstname:
-            database.updateUserFirstname(self.id, self.chatID, firstname)
-            data["firstname"] = firstname
-            
-        if username and data.get("username") != username:
-            database.updateUserProfile(self.id, self.chatID, data.get("firstname"), username)
-            data["username"] = username
-
-        self.firstname = data.get("firstname")
-        self.username = data.get("username")
-        self.marriedTo = data.get("marriedTo")
-        self.marriedAt = data.get("marriedAt")
-        self.petID = data.get("petID")
-
-    def updateUser(self, firstname=None, marriedTo=None, marriedAt=None, petID=None):
-        if firstname is not None:
-            database.updateUserFirstname(self.id, self.chatID, firstname)
-
-        if marriedTo is not None:
-            database.updateUserMarriedTo(self.id, self.chatID, marriedTo)
-
-        if marriedAt is not None:
-            database.updateUserMarriedAt(self.id, self.chatID, marriedAt)
-
-        if petID is not None:
-            database.updateUserPet(self.id, self.chatID, petID)
-
 
 async def marry(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatID = update.effective_chat.id
@@ -71,13 +33,15 @@ async def marry(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = update.effective_message
 
-    proposingToUserObj = await getProposingToUserObj(update, context, message, chatID)
+    proposingToUserObj = await getTargetUserObj(update, context, message, chatID)
 
     if proposingToUserObj is None:
         await context.bot.send_message(
             chat_id=chatID,
             text="Please specify a user! (/marry @username or reply to someone)"
         )
+        return
+    elif proposingToUserObj == "Replied":
         return
 
     if proposingUserObj.id == proposingToUserObj.id:
@@ -173,36 +137,3 @@ async def marry_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="The proposal was declined 💔",
             reply_markup=keyboard
         )
-
-
-async def getProposingToUserObj(update: Update, context: ContextTypes.DEFAULT_TYPE, message, chatID):
-    if message.reply_to_message:
-        user = message.reply_to_message.from_user
-        return User(user.id, chatID, user.first_name, user.username)
-
-    if message.entities:
-        for entity in message.entities:
-            if entity.type == "text_mention":
-                user = entity.user
-                return User(user.id, chatID, user.first_name, user.username)
-
-            elif entity.type == "mention":
-                raw_username = message.text[entity.offset:entity.offset + entity.length]
-                clean_username = raw_username.lstrip("@")
-                
-                db_user = database.getUserByUsername(clean_username, chatID)
-                if db_user:
-                    return User(db_user['userID'], chatID, db_user['firstname'], db_user['username'])
-                
-                try:
-                    await context.bot.send_message(
-                        chat_id = chatID,
-                        text = "I am unable to find the user, please reply to their message with /marry\n" \
-                        "Or ask them to type something in chat and then /marry @username."
-                    )
-                    return None
-                except Exception as e:
-                    print(f"Didn't find {raw_username}: {e}")
-                    return None
-                    
-    return None
