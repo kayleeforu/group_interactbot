@@ -5,6 +5,7 @@ from handlers.messageHandler import processMessage
 from commands.marry import marry, marry_callback
 from commands.kissHug import kissHug
 from functools import partial
+from commands.marriages import getMarriages, marriages_callback
 
 logging.basicConfig(
    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -40,6 +41,10 @@ if __name__ == '__main__':
     application.add_handler(marryCommand)
     application.add_handler(messageHandler)
     application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
+
+    marriagesCommand = CommandHandler("marriages", getMarriages)
+    application.add_handler(marriagesCommand)
+    application.add_handler(CallbackQueryHandler(marriages_callback, pattern=r"^marriages_page:"))
     
     # Run bot
     application.run_polling()
