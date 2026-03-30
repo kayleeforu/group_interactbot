@@ -34,17 +34,15 @@ if __name__ == '__main__':
     marryCommand = CommandHandler("marry", marry)
     kissCommand = CommandHandler("kiss", kissHug)
     hugCommand = CommandHandler("hug", partial(kissHug, action="hug"))
+    marriagesCommand = CommandHandler("marriages", getMarriages)
 
     application.add_handler(kissCommand)
     application.add_handler(hugCommand)
-    
     application.add_handler(marryCommand)
-    application.add_handler(messageHandler)
-    application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
-
-    marriagesCommand = CommandHandler("marriages", getMarriages)
     application.add_handler(marriagesCommand)
+    application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
     application.add_handler(CallbackQueryHandler(marriages_callback, pattern=r"^marriages_page:"))
+    application.add_handler(messageHandler)
     
     # Run bot
     application.run_polling()
