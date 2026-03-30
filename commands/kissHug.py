@@ -14,7 +14,7 @@ async def kissHug(update: Update, context: ContextTypes.DEFAULT_TYPE, action = "
     message = update.effective_message
 
     calledUser = User(user.id, chatID, user.first_name, user.username)
-    targetUser = getTargetUserObj(update, context, message, chatID)
+    targetUser = await getTargetUserObj(update, context, message, chatID)
     if not targetUser or targetUser == "Replied":
         return
 
