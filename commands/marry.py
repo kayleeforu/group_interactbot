@@ -172,21 +172,22 @@ async def marry_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def getProposingToUserObj(update: Update, context: ContextTypes.DEFAULT_TYPE, message, chatID):
     if message.reply_to_message:
-        proposingToUser = message.reply_to_message.from_user
-        return User(proposingToUser.id, chatID, proposingToUser.first_name)
-
+        user = message.reply_to_message.from_user
+        return User(user.id, chatID, user.first_name)
+    
     if message.entities:
         for entity in message.entities:
             if entity.type == "text_mention":
-                proposingToUser = entity.user
-                return User(proposingToUser.id, chatID, proposingToUser.first_name)
+                user = entity.user
+                return User(user.id, chatID, user.first_name)
 
             elif entity.type == "mention":
-                username = message.parse_entity(entity).lstrip("@")
+                username = message.text[entity.offset:entity.offset + entity.length]
                 try:
-                    proposingToUser = await context.bot.get_chat(username)
-                    return User(proposingToUser.id, chatID, proposingToUser.first_name)
-                except:
+                    chat_info = await context.bot.get_chat(username)
+                    name = chat_info.first_name or chat_info.title or "Unknown"
+                    return User(chat_info.id, chatID, name)
+                except Exception as e:
+                    print(f"Error resolving username: {e}")
                     return None
-
     return None
