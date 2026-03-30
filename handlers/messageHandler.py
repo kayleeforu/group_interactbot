@@ -16,6 +16,6 @@ async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if message == "test":
         await context.bot.send_message(
             chat_id = chatID,
-            text = "Hiii, <bold>testing</bold> things.",
+            text = "Hiii, <b>testing</b> things.",
             parse_mode = "HTML"
         )
