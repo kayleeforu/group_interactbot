@@ -75,3 +75,16 @@ class Database:
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
         return response[0]["petID"]
+    
+    def getUser(self, userID, chatID):
+        db = self.getClient()
+        response = db.table("users") \
+            .select("*") \
+            .eq("userID", int(userID)) \
+            .eq("chatID", int(chatID)) \
+            .execute().data
+
+        if not response:
+            return None
+
+        return response[0]
