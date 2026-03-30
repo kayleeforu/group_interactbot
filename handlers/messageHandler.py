@@ -7,9 +7,9 @@ database = db.Database()
 async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatID = update.effective_chat.id
 
-    user = update.effective_sender
-    if not database.lookUpUser(user.id):
-        database.insertNewUser(user.id, user.first_name)
+    user = update.effective_user
+    if not database.lookUpUser(user.id, chatID):
+        database.insertNewUser(user.id, chatID, user.first_name)
 
     isGroupChat = update.effective_chat.type in ["group", "supergroup"]
     if not isGroupChat:
