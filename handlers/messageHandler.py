@@ -1,8 +1,15 @@
 from telegram import Update
 from telegram.ext import ContextTypes
+import db
+
+database = db.Database()
 
 async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatID = update.effective_chat.id
+
+    user = update.effective_sender
+    if not database.lookUpUser(user.id):
+        database.insertNewUser(user.id, user.first_name)
 
     isGroupChat = update.effective_chat.type in ["group", "supergroup"]
     if not isGroupChat:
