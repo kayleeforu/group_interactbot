@@ -16,12 +16,28 @@ class Database:
         response = db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()
         return bool(response.data)
     
-    def insertNewUser(self, userID, chatID, firstname):
+    def insertNewUser(self, userID, chatID, firstname, username=None):
         db = self.getClient()
         db.table("users").upsert({
             "userID": int(userID),
             "chatID": int(chatID),
-            "firstname": firstname
+            "firstname": firstname,
+            "username": username
+        }).execute()
+
+    def getUserByUsername(self, username, chatID):
+        db = self.getClient()
+        username = username.lstrip("@")
+        response = db.table("users").select("*").eq("username", username).eq("chatID", int(chatID)).execute()
+        return response.data[0] if response.data else None
+
+    def updateUserProfile(self, userID, chatID, firstname, username=None):
+        db = self.getClient()
+        db.table("users").upsert({
+            "userID": int(userID),
+            "chatID": int(chatID),
+            "firstname": firstname,
+            "username": username
         }).execute()
 
     def updateUserFirstname(self, userID, chatID, firstname):
@@ -59,32 +75,24 @@ class Database:
     def getUserMarriedTo(self, userID, chatID):
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
-        return response[0]["marriedTo"]
+        return response[0]["marriedTo"] if response else None
     
     def getUserMarriedAt(self, userID, chatID):
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
-        return response[0]["marriedAt"]
+        return response[0]["marriedAt"] if response else None
     
     def getFirstname(self, userID, chatID):
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
-        return response[0]["firstname"]
+        return response[0]["firstname"] if response else None
     
     def getPet(self, userID, chatID):
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
-        return response[0]["petID"]
-    
+        return response[0]["petID"] if response else None
+
     def getUser(self, userID, chatID):
         db = self.getClient()
-        response = db.table("users") \
-            .select("*") \
-            .eq("userID", int(userID)) \
-            .eq("chatID", int(chatID)) \
-            .execute().data
-
-        if not response:
-            return None
-
-        return response[0]
+        response = db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute().data
+        return response[0] if response else None

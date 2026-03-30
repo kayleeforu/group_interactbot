@@ -8,21 +8,26 @@ database = db.Database()
 
 
 class User:
-    def __init__(self, userID, chatID, firstname=None):
+    def __init__(self, userID, chatID, firstname=None, username=None):
         self.id = int(userID)
         self.chatID = int(chatID)
 
         data = database.getUser(self.id, self.chatID)
 
         if data is None:
-            database.insertNewUser(self.id, self.chatID, firstname or "Unknown")
+            database.insertNewUser(self.id, self.chatID, firstname or "Unknown", username)
             data = database.getUser(self.id, self.chatID)
 
         if firstname and data.get("firstname") != firstname:
             database.updateUserFirstname(self.id, self.chatID, firstname)
             data["firstname"] = firstname
+            
+        if username and data.get("username") != username:
+            database.updateUserProfile(self.id, self.chatID, data.get("firstname"), username)
+            data["username"] = username
 
         self.firstname = data.get("firstname")
+        self.username = data.get("username")
         self.marriedTo = data.get("marriedTo")
         self.marriedAt = data.get("marriedAt")
         self.petID = data.get("petID")
@@ -53,7 +58,7 @@ async def marry(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     proposingUser = update.effective_user
-    proposingUserObj = User(proposingUser.id, chatID, proposingUser.first_name)
+    proposingUserObj = User(proposingUser.id, chatID, proposingUser.first_name, proposingUser.username)
 
     if proposingUserObj.marriedTo is not None:
         marriedToObj = User(proposingUserObj.marriedTo, chatID)
@@ -173,25 +178,31 @@ async def marry_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def getProposingToUserObj(update: Update, context: ContextTypes.DEFAULT_TYPE, message, chatID):
     if message.reply_to_message:
         user = message.reply_to_message.from_user
-        return User(user.id, chatID, user.first_name)
+        return User(user.id, chatID, user.first_name, user.username)
 
     if message.entities:
         for entity in message.entities:
             if entity.type == "text_mention":
                 user = entity.user
-                return User(user.id, chatID, user.first_name)
+                return User(user.id, chatID, user.first_name, user.username)
 
             elif entity.type == "mention":
-                username = message.text[entity.offset:entity.offset + entity.length]
+                raw_username = message.text[entity.offset:entity.offset + entity.length]
+                clean_username = raw_username.lstrip("@")
                 
-                if not username.startswith("@"):
-                    username = f"@{username}"
+                db_user = database.getUserByUsername(clean_username, chatID)
+                if db_user:
+                    return User(db_user['userID'], chatID, db_user['firstname'], db_user['username'])
                 
                 try:
-                    user_chat = await context.bot.get_chat(username)
-                    return User(user_chat.id, chatID, user_chat.first_name)
+                    await context.bot.send_message(
+                        chat_id = chatID,
+                        text = "I am unable to find the user, please reply to their message with /marry\n" \
+                        "Or ask them to type something in chat and then /marry @username."
+                    )
+                    return None
                 except Exception as e:
-                    print(f"Didn't find {username}: {e}")
+                    print(f"Didn't find {raw_username}: {e}")
                     return None
                     
     return None
