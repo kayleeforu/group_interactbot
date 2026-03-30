@@ -6,7 +6,7 @@ async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     isGroupChat = update.effective_chat.type in ["group", "supergroup"]
     if not isGroupChat:
-        context.bot.send_message(
+        await context.bot.send_message(
             chat_id = chatID,
             text = "Sorry, currently I only work in group chats."
         )
@@ -14,7 +14,7 @@ async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     message = update.effective_message.text
     if message == "test":
-        context.bot.send_message(
+        await context.bot.send_message(
             chat_id = chatID,
             text = "Hiii, <bold>testing</bold> things.",
             parse_mode = "HTML"
