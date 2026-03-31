@@ -9,6 +9,14 @@ from time import sleep
 WAITING_FOR_NAME = 1
 
 async def getPet(update: Update, context: ContextTypes.DEFAULT_TYPE):    
+    user = User(update.effective_user.id)
+    if user.petID is not None:
+        await context.bot.send_message(
+            chat_id = update.effective_chat.id,
+            text = "Sorry, but you already have a pet"
+        )
+        return ConversationHandler.END
+    
     await context.bot.send_message(
         chat_id = update.effective_chat.id,
         text = "Write the name for your pet in this chat"
