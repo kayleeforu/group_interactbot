@@ -54,7 +54,7 @@ if __name__ == '__main__':
     application.add_handler(marriagesCommand)
     application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
     application.add_handler(CallbackQueryHandler(marriages_callback, pattern=r"^marriages_page:"))
-    application.add_handler(CallbackQueryHandler(petType_callback, pattern=r"^\d+:(cat|dog|pig|bunny|chicken):"))
+    application.add_handler(CallbackQueryHandler(petType_callback, pattern=r"^\d+:\-?\d+:(cat|dog|pig|bunny|chicken):"))
     application.add_handler(messageHandler)
     
     # Run bot
