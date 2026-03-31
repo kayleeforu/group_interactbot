@@ -70,7 +70,7 @@ async def petType_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     pet = Pet(int(userID), petName, petType, False)
-    database.updateUserPet(int(userID), int(chatID), pet.petID)
+    database.updateUserPet(int(userID), pet.petID)
 
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🎊🎉", callback_data="nothing")]
