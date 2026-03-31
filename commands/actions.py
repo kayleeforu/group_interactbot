@@ -7,7 +7,7 @@ import os
 
 myID = os.getenv("MY_ID")
 excludedIDs_raw = os.getenv("EXCLUDED_IDS")
-excludedIDs = excluded_ids_raw.split(",") if excluded_ids_raw else []
+excludedIDs = excludedIDs_raw.split(",") if excludedIDs_raw else []
 
 async def actions(update: Update, context: ContextTypes.DEFAULT_TYPE, action):
     if invalidUser(update):
