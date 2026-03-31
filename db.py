@@ -64,11 +64,10 @@ class Database:
             "marriedAt": marriedAt
         }).execute()
 
-    def updateUserPet(self, userID, chatID, petID):
+    def updateUserPet(self, userID, petID):
         db = self.getClient()
         db.table("users").upsert({
             "userID": int(userID),
-            "chatID": int(chatID),
             "petID": petID
         }).execute()
 
