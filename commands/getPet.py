@@ -9,7 +9,7 @@ from time import sleep
 WAITING_FOR_NAME = 1
 
 async def getPet(update: Update, context: ContextTypes.DEFAULT_TYPE):    
-    user = User(update.effective_user.id)
+    user = User(update.effective_user.id, update.effective_chat.id)
     if user.petID is not None:
         await context.bot.send_message(
             chat_id = update.effective_chat.id,
