@@ -3,8 +3,13 @@ from telegram.ext import ContextTypes
 from utilities.User import User
 from random import randint
 from utilities.getTargetUserObj import getTargetUserObj
+import os
 
-async def kissHug(update: Update, context: ContextTypes.DEFAULT_TYPE, action = "kiss"):
+myID = os.getenv("MY_ID")
+excludedIDs_raw = os.getenv("EXCLUDED_IDS")
+excludedIDs = excluded_ids_raw.split(",") if excluded_ids_raw else []
+
+async def actions(update: Update, context: ContextTypes.DEFAULT_TYPE, action):
     if invalidUser(update):
         return
     
@@ -18,7 +23,7 @@ async def kissHug(update: Update, context: ContextTypes.DEFAULT_TYPE, action = "
     if not targetUser or targetUser == "Replied":
         return
 
-    if str(targetUser.id) == "592895797" and str(calledUser.id) != "977796454":
+    if str(targetUser.id) == myID and str(calledUser.id) not in excludedIDs:
         await context.bot.send_message(
             chat_id = chatID,
             text = "No."

@@ -38,7 +38,9 @@ async def gotName(update: Update, context: ContextTypes.DEFAULT_TYPE):
     typeKeyboard = InlineKeyboardMarkup([
         [
             InlineKeyboardButton("🐈 Cat", callback_data=f"{userObj.id}:{chatID}:cat:{name}"),
-            InlineKeyboardButton("🐩 Dog", callback_data=f"{userObj.id}:{chatID}:dog:{name}"),
+            InlineKeyboardButton("🐩 Dog", callback_data=f"{userObj.id}:{chatID}:dog:{name}")
+        ],
+        [
             InlineKeyboardButton("🐷 Pig", callback_data=f"{userObj.id}:{chatID}:pig:{name}"),
             InlineKeyboardButton("🐇 Bunny", callback_data=f"{userObj.id}:{chatID}:bunny:{name}"),
             InlineKeyboardButton("🐥 Chicken", callback_data=f"{userObj.id}:{chatID}:chicken:{name}")

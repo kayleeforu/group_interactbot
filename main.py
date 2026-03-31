@@ -3,10 +3,11 @@ from telegram.ext import ApplicationBuilder, filters, MessageHandler, CommandHan
 import os
 from handlers.messageHandler import processMessage
 from commands.marry import marry, marry_callback
-from commands.kissHug import kissHug
+from commands.actions import actions
 from functools import partial
 from commands.marriages import getMarriages, marriages_callback
 from commands.getPet import getPet, gotName, cancel, WAITING_FOR_NAME, petType_callback
+from commands.myPet import myPet
 
 logging.basicConfig(
    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -33,9 +34,11 @@ if __name__ == '__main__':
     # Message Handler
     messageHandler = MessageHandler(filters.TEXT, processMessage)
     marryCommand = CommandHandler("marry", marry)
-    kissCommand = CommandHandler("kiss", kissHug)
-    hugCommand = CommandHandler("hug", partial(kissHug, action="hug"))
+    kissCommand = CommandHandler("kiss", partial(actions, action="kiss"))
+    hugCommand = CommandHandler("hug", partial(actions, action="hug"))
+    slapCommand = CommandHandler("slap", partial(actions, action="slap"))
     marriagesCommand = CommandHandler("marriages", getMarriages)
+    myPetCommand = CommandHandler("mypet", myPet)
 
     
     conv_handler = ConversationHandler(
@@ -50,6 +53,7 @@ if __name__ == '__main__':
 
     application.add_handler(kissCommand)
     application.add_handler(hugCommand)
+    application.add_handler(slapCommand)
     application.add_handler(marryCommand)
     application.add_handler(marriagesCommand)
     application.add_handler(CallbackQueryHandler(marry_callback, pattern=r"^proposal(Yes|No):"))
