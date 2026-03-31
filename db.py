@@ -66,10 +66,9 @@ class Database:
 
     def updateUserPet(self, userID, petID):
         db = self.getClient()
-        db.table("users").upsert({
-            "userID": int(userID),
+        db.table("users").update({
             "petID": petID
-        }).execute()
+        }).eq("userID", int(userID)).execute()
 
     def getUserMarriedTo(self, userID, chatID):
         db = self.getClient()
