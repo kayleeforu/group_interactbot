@@ -30,12 +30,19 @@ async def actions(update: Update, context: ContextTypes.DEFAULT_TYPE, action):
         )
         return
 
+    if action == "kiss":
+        actionPast = "kissed"
+    elif action == "hug":
+        actionPast = "hugged"
+    elif action == "slap":
+        actionPast = "slapped"
+
     chosenPhoto = randint(1, 5)
     with open (f"resource/{action}/{action}{chosenPhoto}.jpg", "rb") as photo:
         await context.bot.send_photo(
             chat_id = chatID,
             photo = photo,
-            caption = f'<a href="tg://user?id={calledUser.id}">{calledUser.firstname}</a> {"kissed" if action == "kiss" else "hugged"} <a href="tg://user?id={targetUser.id}">{targetUser.firstname}</a>',
+            caption = f'<a href="tg://user?id={calledUser.id}">{calledUser.firstname}</a> {actionPast} <a href="tg://user?id={targetUser.id}">{targetUser.firstname}</a>',
             parse_mode = "HTML"
         )
 
