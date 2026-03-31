@@ -87,7 +87,7 @@ class Database:
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
         return response[0]["firstname"] if response else None
     
-    def getPet(self, userID, chatID):
+    def getUserPetID(self, userID, chatID):
         db = self.getClient()
         response = (db.table("users").select("*").eq("userID", int(userID)).eq("chatID", int(chatID)).execute()).data
         return response[0]["petID"] if response else None
@@ -101,3 +101,18 @@ class Database:
         db = self.getClient()
         response = db.table("users").select("*").eq("chatID", int(chatID)).not_.is_("marriedTo", "NULL").order("marriedAt", desc=False).execute().data
         return response if response else None
+    
+    def getPet(self, userID):
+        db = self.getClient()
+        response = db.table("pets").select("*").eq("userID", int(userID)).execute().data
+        return response[0] if response else None
+    
+    def insertNewPet(self, userID, petName, petType, isRare, bornAt):
+        db = self.getClient()
+        db.table("pets").insert({
+            "userID": int(userID),
+            "petName": petName,
+            "petType": petType,
+            "isRare": isRare,
+            "bornAt": bornAt
+        }).execute()

@@ -1,12 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
-import db
 from datetime import datetime, timezone
 from random import randint
 from utilities.getTargetUserObj import getTargetUserObj
 from utilities.User import User
-
-database = db.Database()
 
 async def marry(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatID = update.effective_chat.id
