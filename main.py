@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     # Message Handler
     messageHandler = MessageHandler(
-        filters.ATTACHMENT | filters.PHOTO | filters.VIDEO | filters.Document.ALL,
+        filters.TEXT,
         processMessage
     )
     marryCommand = CommandHandler("marry", marry)
