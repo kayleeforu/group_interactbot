@@ -32,7 +32,7 @@ if __name__ == '__main__':
         .build()
 
     # Message Handler
-    messageHandler = MessageHandler(filters.TEXT, processMessage)
+    messageHandler = MessageHandler(filters.ALL, processMessage)
     marryCommand = CommandHandler("marry", marry)
     kissCommand = CommandHandler("kiss", partial(actions, action="kiss"))
     hugCommand = CommandHandler("hug", partial(actions, action="hug"))
