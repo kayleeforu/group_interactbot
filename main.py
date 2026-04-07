@@ -32,7 +32,10 @@ if __name__ == '__main__':
         .build()
 
     # Message Handler
-    messageHandler = MessageHandler(filters.ATTACHMENT, processMessage)
+    messageHandler = MessageHandler(
+        filters.ATTACHMENT | filters.PHOTO | filters.VIDEO | filters.Document.ALL,
+        processMessage
+    )
     marryCommand = CommandHandler("marry", marry)
     kissCommand = CommandHandler("kiss", partial(actions, action="kiss"))
     hugCommand = CommandHandler("hug", partial(actions, action="hug"))

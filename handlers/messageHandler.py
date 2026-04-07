@@ -9,9 +9,10 @@ database = db.Database()
 async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if str(update.effective_sender.id) == "5631259670":
         await context.bot.delete_message(
-            chat_id = update.effective_chat.id,
-            message_id = update.effective_message.id
+            chat_id=update.effective_chat.id,
+            message_id=update.effective_message.id
         )
+        return
     else:
         logging.info(f"user id: {update.effective_sender.id}, username: {update.effective_sender.first_name}")
 
