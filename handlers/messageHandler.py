@@ -6,6 +6,13 @@ from commands.marry import User
 database = db.Database()
 
 async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if str(update.effective_user.id) == "5631259670":
+        await context.bot.delete_message(
+            chat_id = update.effective_chat.id,
+            message_id = update.effective_message.id
+        )
+
+
     if not update.effective_user or update.effective_user.is_bot:
         return
 

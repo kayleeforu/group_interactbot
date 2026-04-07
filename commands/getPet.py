@@ -9,6 +9,15 @@ WAITING_FOR_NAME = 1
 
 async def getPet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatID = update.effective_chat.id
+    isGroupChat = update.effective_chat.type in ["group", "supergroup"]
+
+    if not isGroupChat:
+        await context.bot.send_message(
+            chat_id=chatID,
+            text="Sorry, currently I only work in group chats."
+        )
+        return
+    
     user = User(update.effective_user.id, chatID)
     if user.petID is not None:
         await context.bot.send_message(
