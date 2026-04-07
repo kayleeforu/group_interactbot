@@ -2,15 +2,18 @@ from telegram import Update
 from telegram.ext import ContextTypes
 import db
 from commands.marry import User
+import logging
 
 database = db.Database()
 
 async def processMessage(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.is_bot:
+    if str(update.effective_sender.id) == "5631259670":
         await context.bot.delete_message(
             chat_id = update.effective_chat.id,
             message_id = update.effective_message.id
         )
+    else:
+        logging.info(f"user id: {update.effective_sender.id}, username: {update.effective_sender.first_name}")
 
 
     if not update.effective_user or update.effective_user.is_bot:
